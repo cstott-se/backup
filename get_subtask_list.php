@@ -110,7 +110,7 @@ function  my_send_mail($to,&$message)
 
 function add_header(&$message,$project_name) {
   // Add "header" for current project to email
-  $message .= '<h2>Open sub-tasks for the project: ' . $project_name . '</h2>';
+  $message .= '<h2>Open sub-tasks for the task: ' . $project_name . '</h2>';
   // Build Table of results
   $message .= '<table style="font-size: .8em; table-layout: fixed; width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 20px;" cellpadding=5 cellspacing=1>';
   $message .= '<tr style="background: #fbfbfb; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
