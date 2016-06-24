@@ -35,7 +35,7 @@
     exit;
   }
 
-    $first_time = true;
+  $first_time = true;
   // Go through result of SQL
   while ($row = $result->fetch_assoc()) {
     if ($first_time) {
@@ -56,7 +56,7 @@
       else {
       	// End table for previous project
         $message .= '</table><br/><br/>';
-    	  $project = $row['project_name'];
+        $project = $row['project_name'];
 
         // Create table for new project
         add_header($message,$row['project_name']);
@@ -115,14 +115,15 @@ function add_header(&$message,$project_name) {
   $message .= '<table style="font-size: .8em; table-layout: fixed; width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 20px;" cellpadding=5 cellspacing=1>';
   $message .= '<tr style="background: #fbfbfb; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
   $message .= '<th style="border: 1px solid #eee; width:10%;">Id</th>';
-  $message .= '<th style="border: 1px solid #eee; width:50%;">Title</th>';
-  $message .= '<th style="border: 1px solid #eee; width:15%;">Due date</th>';
+  $message .= '<th style="border: 1px solid #eee; width:65%;">Title</th>';
+  $message .= '<th style="border: 1px solid #eee; width:25%;">Due date</th>';
+  $message .= '</tr>';
 }
 
 function add_task(&$message, $tasks_id, $project_id, $subtask_name, $due_date, $host_IP) {
   $message .= '<tr style="overflow: hidden; background: #fff; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
   $message .= '<td style="border: 1px solid #eee; text-align: center;">KB-' . $tasks_id . '</td>';
-  $message .= '<td style="border: 1px solid #eee;"><a href="http://' . $host_IP . '/kanboard.local/?controller=task&action=show&task_id='.$tasks_id.'&project_id='.$project_id.'">'.$subtask_name.'</a>';
+  $message .= '<td style="border: 1px solid #eee;"><a href="http://' . $host_IP . '/kanboard.local/?controller=task&action=show&task_id='.$tasks_id.'&project_id='.$project_id.'">'.$subtask_name.'</a></td>';
 
   $message .= '<td style="border: 1px solid #eee; text-align: center;">';
   if ($due_date > 0) {

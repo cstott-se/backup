@@ -19,7 +19,7 @@
   $hostIP = "xxx";
 
   // Start Script
-  echo 'Running script...'.PHP_EOL;
+  echo 'Running open task script...'.PHP_EOL;
 
   // Load contacts in to an Array
   $myArray = array();
@@ -43,12 +43,12 @@
 
   // Grab first email address in the myArray
   $currentEmail = $myArray[0][1];
-
   $message = '<html><body>';
   $message .= '<p>' . $myArray[0][0] . ',<br/><br/>Attached is a list of all your open RPI tasks.</p>';
-  reset($myArray);
 
+  reset($myArray);
   $rows_present = false;
+
   // Loop through myArray and create emails based on "status:open $myarray[2]" search
   foreach ($myArray as $project) {
     if (strcmp($project[1], $currentEmail) !== 0) {
@@ -56,15 +56,16 @@
       if ($rows_present) {
         my_send_mail($currentEmail,$message);
       }
+
       // Set up next email
       $rows_present = false;
       $currentEmail = $project[1];
       $message = '<html><body>';
       $message .= '<p>' . $project[3] . ',<br/><br/>Attached is a list of all your open RPI tasks.</p>';
     }
-
     // Grab next project for current email
     $sql = 'SELECT tasks.id, tasks.title, tasks.date_due, name FROM tasks INNER JOIN users ON tasks.owner_id = users.id WHERE tasks.project_id = 2 AND tasks.is_active = 1 AND tasks.title LIKE "%' . $project[2] . '%"';
+
     if (!$result = $mysqli->query($sql)) {
       echo "Error: Our query failed to execute and here is why: \n";
       echo "Query: " . $sql . "\n";
@@ -76,6 +77,7 @@
     // make sure part at least one row to return
     if ($result->num_rows > 0) {
       $rows_present = true;
+
       // Add "header" for current project to email
       $message .= '<h2>Open tasks for the project: ' . $project[3] . '</h2>';
 
@@ -91,7 +93,7 @@
       while ($row = $result->fetch_assoc()) {
         $message .= '<tr style="overflow: hidden; background: #fff; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
         $message .= '<td style="border: 1px solid #eee; text-align: center;">KB-' . $row['id'] . '</td>';
-        $message .= '<td style="border: 1px solid #eee;"><a href="http://' . $hostIP . '/kanboard.local/?controller=task&action=readonly&task_id='.$row['id'].'&token='.$projectToken.'">'.$row['title'].'</a>';
+        $message .= '<td style="border: 1px solid #eee;"><a href="http://' . $hostIP . '/kanboard.local/?controller=task&action=readonly&task_id='.$row['id'].'&token='.$projectToken.'">'.$row['title'].'</a></td>';
         $message .= '<td style="border: 1px solid #eee; text-align: center;">';
           if ($row['date_due'] > 0) {
             $message .= date("Y-m-d", $row['date_due']);
@@ -123,6 +125,7 @@ function  my_send_mail($to,&$message)
   $subject = "Weekly RPI Open Tasks Report";
   $message .= '<p>If your have any questions regarding these tasks or notice that there are some missing please follow up with your RPI prime for that project.';
   $message .= '</body></html>';
+
   if(mail($to,$subject,$message, $headers)) {
     echo "Mail sent successfully.\n";
   } else {
