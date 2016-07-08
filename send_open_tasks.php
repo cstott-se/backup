@@ -64,7 +64,7 @@
       $message .= '<p>' . $project[3] . ',<br/><br/>Attached is a list of all your open RPI tasks.</p>';
     }
     // Grab next project for current email
-    $sql = 'SELECT tasks.id, tasks.title, tasks.date_due, name FROM tasks INNER JOIN users ON tasks.owner_id = users.id WHERE tasks.project_id = 2 AND tasks.is_active = 1 AND tasks.title LIKE "%' . $project[2] . '%"';
+    $sql = 'SELECT tasks.id, tasks.title, tasks.date_due, columns.title AS state, users.name FROM tasks INNER JOIN users ON tasks.owner_id = users.id INNER JOIN columns ON tasks.column_id = columns.id WHERE tasks.project_id = 2 AND tasks.is_active = 1 AND tasks.title LIKE "%' . $project[2] . '%"';
 
     if (!$result = $mysqli->query($sql)) {
       echo "Error: Our query failed to execute and here is why: \n";
@@ -85,15 +85,17 @@
       $message .= '<table style="font-size: .8em; table-layout: fixed; width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 20px;" cellpadding=5 cellspacing=1>';
       $message .= '<tr style="background: #fbfbfb; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
       $message .= '<th style="border: 1px solid #eee; width:10%;">Id</th>';
-      $message .= '<th style="border: 1px solid #eee; width:50%;">Title</th>';
+      $message .= '<th style="border: 1px solid #eee; width:40%;">Title</th>';
+      $message .= '<th style="border: 1px solid #eee; width:15%;">Column</th>';
       $message .= '<th style="border: 1px solid #eee; width:15%;">Due date</th>';
-      $message .= '<th style="border: 1px solid #eee; width:25%;">Assignee</th></tr>';
+      $message .= '<th style="border: 1px solid #eee; width:20%;">Assignee</th></tr>';
 
       // Loop through results and add rows to message
       while ($row = $result->fetch_assoc()) {
         $message .= '<tr style="overflow: hidden; background: #fff; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">';
         $message .= '<td style="border: 1px solid #eee; text-align: center;">KB-' . $row['id'] . '</td>';
         $message .= '<td style="border: 1px solid #eee;"><a href="http://' . $hostIP . '/kanboard.local/?controller=task&action=readonly&task_id='.$row['id'].'&token='.$projectToken.'">'.$row['title'].'</a></td>';
+        $message .= '<td style="border: 1px solid #eee; text-align: center;">' . $row['state'] . '</td>';
         $message .= '<td style="border: 1px solid #eee; text-align: center;">';
           if ($row['date_due'] > 0) {
             $message .= date("Y-m-d", $row['date_due']);
